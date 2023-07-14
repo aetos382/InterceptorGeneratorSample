@@ -15,30 +15,6 @@ public class Generator :
     public void Initialize(
         IncrementalGeneratorInitializationContext context)
     {
-        context.RegisterPostInitializationOutput(static context =>
-        {
-            context.AddSource(
-                "InterceptsLocationAttribute.cs",
-                """
-                namespace System.Runtime.CompilerServices
-                {
-                    [global::System.AttributeUsage(
-                        global::System.AttributeTargets.Method,
-                        AllowMultiple = true)]
-                    internal sealed class InterceptsLocationAttribute :
-                        global::System.Attribute
-                    {
-                        public InterceptsLocationAttribute(
-                            string filePath,
-                            int line,
-                            int character)
-                        {
-                        }
-                    }
-                }
-                """);
-        });
-
         var source = context.SyntaxProvider
             .CreateSyntaxProvider(
                 static (node, cancellationToken) =>
@@ -131,12 +107,6 @@ public class Generator :
                         SyntaxFactory.List(
                             new MemberDeclarationSyntax[]
                             {
-/*
- * InterceptsLocationAttribute を file class として出力すると
- * 名前がマングリングされて "InterceptsLocationAttribute" じゃなくなってしまう
- */
-
-/*
                                 SyntaxFactory
                                     .NamespaceDeclaration(
                                         SyntaxFactory.ParseName("System.Runtime.CompilerServices"))
@@ -151,29 +121,44 @@ public class Generator :
                                                             SyntaxFactory.Token(SyntaxKind.FileKeyword),
                                                             SyntaxFactory.Token(SyntaxKind.SealedKeyword)))
                                                     .WithAttributeLists(
-                                                        SyntaxFactory.SingletonList(
-                                                            SyntaxFactory.AttributeList(
-                                                                SyntaxFactory.SingletonSeparatedList(
-                                                                    SyntaxFactory.Attribute(
-                                                                        SyntaxFactory.ParseName("global::System.AttributeUsageAttribute"),
-                                                                        SyntaxFactory.AttributeArgumentList(
-                                                                            SyntaxFactory.SeparatedList(
-                                                                                new[]
-                                                                                {
-                                                                                    SyntaxFactory.AttributeArgument(
-                                                                                        default,
-                                                                                        default,
-                                                                                        SyntaxFactory.MemberAccessExpression(
-                                                                                            SyntaxKind.SimpleMemberAccessExpression,
-                                                                                            SyntaxFactory.ParseTypeName("global::System.AttributeTargets"),
-                                                                                            SyntaxFactory.IdentifierName(nameof(AttributeTargets.Method)))),
-                                                                                    SyntaxFactory.AttributeArgument(
-                                                                                        SyntaxFactory.NameEquals(
-                                                                                            SyntaxFactory.IdentifierName("AllowMultiple")),
-                                                                                        default,
-                                                                                        SyntaxFactory.LiteralExpression(
-                                                                                            SyntaxKind.TrueLiteralExpression))
-                                                                                })))))))
+                                                        SyntaxFactory.List(
+                                                            new AttributeListSyntax[]
+                                                            {
+                                                                SyntaxFactory.AttributeList(
+                                                                    SyntaxFactory.SingletonSeparatedList(
+                                                                        SyntaxFactory.Attribute(
+                                                                            SyntaxFactory.ParseName("global::System.Diagnostics.ConditionalAttribute"),
+                                                                            SyntaxFactory.AttributeArgumentList(
+                                                                                SyntaxFactory.SingletonSeparatedList(
+                                                                                        SyntaxFactory.AttributeArgument(
+                                                                                            default,
+                                                                                            default,
+                                                                                            SyntaxFactory.LiteralExpression(
+                                                                                                SyntaxKind.StringLiteralExpression,
+                                                                                                SyntaxFactory.Literal("GENERATOR_ONLY")))))))),
+                                                                SyntaxFactory.AttributeList(
+                                                                    SyntaxFactory.SingletonSeparatedList(
+                                                                        SyntaxFactory.Attribute(
+                                                                            SyntaxFactory.ParseName("global::System.AttributeUsageAttribute"),
+                                                                            SyntaxFactory.AttributeArgumentList(
+                                                                                SyntaxFactory.SeparatedList(
+                                                                                    new[]
+                                                                                    {
+                                                                                        SyntaxFactory.AttributeArgument(
+                                                                                            default,
+                                                                                            default,
+                                                                                            SyntaxFactory.MemberAccessExpression(
+                                                                                                SyntaxKind.SimpleMemberAccessExpression,
+                                                                                                SyntaxFactory.ParseTypeName("global::System.AttributeTargets"),
+                                                                                                SyntaxFactory.IdentifierName(nameof(AttributeTargets.Method)))),
+                                                                                        SyntaxFactory.AttributeArgument(
+                                                                                            SyntaxFactory.NameEquals(
+                                                                                                SyntaxFactory.IdentifierName("AllowMultiple")),
+                                                                                            default,
+                                                                                            SyntaxFactory.LiteralExpression(
+                                                                                                SyntaxKind.TrueLiteralExpression))
+                                                                                    })))))
+                                                            }))
                                                     .WithBaseList(
                                                         SyntaxFactory.BaseList(
                                                             SyntaxFactory.SingletonSeparatedList<BaseTypeSyntax>(
@@ -203,7 +188,6 @@ public class Generator :
                                                                 .WithBody(
                                                                     SyntaxFactory.Block())))
                                             })),
-*/
                                 SyntaxFactory
                                     .ClassDeclaration("Interceptor")
                                     .WithModifiers(
