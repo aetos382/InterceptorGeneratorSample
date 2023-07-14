@@ -18,27 +18,25 @@ public class Generator :
         var source = context.SyntaxProvider
             .CreateSyntaxProvider(
                 static (node, cancellationToken) =>
-                {
-                    if (node is IdentifierNameSyntax name &&
-                        name.Identifier.Text == nameof(Console.WriteLine) &&
-                        name.Parent is MemberAccessExpressionSyntax memberAccess &&
-                        memberAccess.IsKind(SyntaxKind.SimpleMemberAccessExpression) &&
-                        memberAccess.Expression is IdentifierNameSyntax typeName &&
-                        memberAccess.Parent is InvocationExpressionSyntax invocation &&
-                        invocation.ArgumentList.Arguments is [
-                            {
-                                Expression: LiteralExpressionSyntax
-                                {
-                                    RawKind: (int)SyntaxKind.StringLiteralExpression,
-                                }
-                            }
-                        ])
+                    node is IdentifierNameSyntax
                     {
-                        return true;
+                        Identifier.Text: nameof(Console.WriteLine),
+                        Parent: MemberAccessExpressionSyntax
+                        {
+                            Expression: IdentifierNameSyntax,
+                            Parent: InvocationExpressionSyntax
+                            {
+                                ArgumentList.Arguments:
+                                [
+                                    {
+                                        Expression: LiteralExpressionSyntax argument
+                                    }
+                                ]
+                            }
+                        } memberAccess
                     }
-
-                    return false;
-                },
+                    && memberAccess.IsKind(SyntaxKind.SimpleMemberAccessExpression)
+                    && argument.IsKind(SyntaxKind.StringLiteralExpression),
                 static (context, cancellationToken) =>
                 {
                     var node = (IdentifierNameSyntax)context.Node;
