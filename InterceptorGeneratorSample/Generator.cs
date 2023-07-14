@@ -39,16 +39,18 @@ public class Generator :
                     && argument.IsKind(SyntaxKind.StringLiteralExpression),
                 static (context, cancellationToken) =>
                 {
+                    cancellationToken.ThrowIfCancellationRequested();
+
                     var node = (IdentifierNameSyntax)context.Node;
                     var symbolInfo = context.SemanticModel.GetSymbolInfo(node, cancellationToken);
-                    var symbol = (IMethodSymbol)symbolInfo.Symbol;
+                    var symbol = (IMethodSymbol)symbolInfo.Symbol!;
 
                     return (Node: node, Symbol: symbol);
                 })
             .Collect()
             .Combine(context.CompilationProvider);
 
-        context.RegisterSourceOutput(
+        context.RegisterImplementationSourceOutput(
             source,
             static (context, source) =>
             {
@@ -61,6 +63,8 @@ public class Generator :
 
                 foreach (var (node, symbol) in nodes)
                 {
+                    context.CancellationToken.ThrowIfCancellationRequested();
+
                     if (!SymbolEqualityComparer.Default.Equals(symbol.ReceiverType, consoleSymbol))
                     {
                         continue;
