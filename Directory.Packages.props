@@ -1,21 +1,6 @@
 <Project>
   <PropertyGroup>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
-    <EnableInterceptorsPreview>true</EnableInterceptorsPreview>
-  </PropertyGroup>
-  <PropertyGroup>
-    <CompilerVersion>4.6.0</CompilerVersion>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(EnableInterceptorsPreview)' == 'true'">
-    <CompilerVersion>4.8.0-1.23362.8</CompilerVersion>
-    <RestoreAdditionalProjectSources>
-      $(RestoreAdditionalProjectSources);
-      https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet-tools/nuget/v3/index.json
-    </RestoreAdditionalProjectSources>
-    <Features>
-      $(Features);
-      InterceptorsPreview
-    </Features>
   </PropertyGroup>
   <ItemGroup>
     <PackageVersion Include="IndexRange" Version="1.0.2" />
