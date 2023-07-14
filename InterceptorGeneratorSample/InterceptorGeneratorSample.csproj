@@ -6,15 +6,20 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>disable</ImplicitUsings>
     <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
-    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <DevelopmentDependency>true</DevelopmentDependency>
     <IsRoslynComponent>true</IsRoslynComponent>
     <IncludeBuildOutput>false</IncludeBuildOutput>
+    <PackageLicenseExpression>Unlicense</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/aetos382/InterceptorGeneratorSample.git</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/aetos382/InterceptorGeneratorSample</PackageProjectUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="IndexRange">
       <PrivateAssets>all</PrivateAssets>
+      <GeneratePathProperty>true</GeneratePathProperty>
     </PackageReference>
     <PackageReference Include="Microsoft.Net.Compilers.Toolset">
       <PrivateAssets>all</PrivateAssets>
@@ -23,5 +28,37 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
   </ItemGroup>
+
+  <PropertyGroup>
+    <BeforePack>
+      $(BeforePack);
+      PreparePackageContents
+    </BeforePack>
+  </PropertyGroup>
+
+  <Target Name="PreparePackageContents">
+    <Touch Files="$([MSBuild]::EnsureTrailingSlash($(IntermediateOutputPath)))_._" AlwaysCreate="true">
+      <Output TaskParameter="TouchedFiles" ItemName="TfmMarker"/>
+    </Touch>
+
+    <ItemGroup>
+      <None Include="$(TargetPath)">
+        <Pack>true</Pack>
+        <PackagePath>analyzers/dotnet/cs/roslyn4.8</PackagePath>
+      </None>
+      <None Include="$(PkgIndexRange)\lib\netstandard2.0\IndexRange.dll">
+        <Pack>true</Pack>
+        <PackagePath>analyzers/dotnet/cs/roslyn4.8</PackagePath>
+      </None>
+      <None Include="..\README.md">
+        <Pack>true</Pack>
+        <PackagePath>\</PackagePath>
+      </None>
+      <None Include="@(TfmMarker)">
+        <Pack>true</Pack>
+        <PackagePath>lib/netstandard2.0</PackagePath>
+      </None>
+    </ItemGroup>
+  </Target>
 
 </Project>

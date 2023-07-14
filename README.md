@@ -1,0 +1,2 @@
+# InterceptorGeneratorSample
+なにこれ。

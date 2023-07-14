@@ -5,3 +5,5 @@ obj/
 Generated/
 
 *.user
+*.log
+*.binlog
