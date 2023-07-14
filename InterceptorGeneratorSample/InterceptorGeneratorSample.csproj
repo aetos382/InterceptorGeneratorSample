@@ -5,15 +5,19 @@
     <LangVersion>preview</LangVersion>
     <Nullable>enable</Nullable>
     <ImplicitUsings>disable</ImplicitUsings>
-    <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <DevelopmentDependency>true</DevelopmentDependency>
-    <IsRoslynComponent>true</IsRoslynComponent>
-    <IncludeBuildOutput>false</IncludeBuildOutput>
-    <PackageLicenseExpression>Unlicense</PackageLicenseExpression>
-    <RepositoryUrl>https://github.com/aetos382/InterceptorGeneratorSample.git</RepositoryUrl>
-    <PackageProjectUrl>https://github.com/aetos382/InterceptorGeneratorSample</PackageProjectUrl>
+    <Authors>aetos</Authors>
+    <Version>0.0.0</Version>
+    <Copyright>Copyright (c) 2022 aetos. All rights abandoned.</Copyright>
+    <PackageTags>Roslyn;Source;Generator;C#;Joke</PackageTags>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageLicenseExpression>Unlicense</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/aetos382/InterceptorGeneratorSample</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/aetos382/InterceptorGeneratorSample.git</RepositoryUrl>
+    <DevelopmentDependency>true</DevelopmentDependency>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+    <IsRoslynComponent>true</IsRoslynComponent>
   </PropertyGroup>
 
   <ItemGroup>
@@ -38,7 +42,7 @@
 
   <Target Name="PreparePackageContents">
     <Touch Files="$([MSBuild]::EnsureTrailingSlash($(IntermediateOutputPath)))_._" AlwaysCreate="true">
-      <Output TaskParameter="TouchedFiles" ItemName="TfmMarker"/>
+      <Output TaskParameter="TouchedFiles" ItemName="TfmMarker" />
     </Touch>
 
     <ItemGroup>
