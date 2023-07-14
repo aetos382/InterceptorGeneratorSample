@@ -1,0 +1,8 @@
+<Project>
+  <PropertyGroup>
+    <DefaultItemExcludesInProjectFolder>
+      $(DefaultItemExcludesInProjectFolder);
+      packages.lock.json
+    </DefaultItemExcludesInProjectFolder>
+  </PropertyGroup>
+</Project>
